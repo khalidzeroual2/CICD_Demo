@@ -1,61 +1,59 @@
-name: Ci + CD demo pipeline
+name: CI + CD demo pipeline
 
-# Define then workflow here shoul run. On a push to main, a PR to main or manually with workflow_dispatch
+# Define when the workflow should run. On a push to main, a PR to main or manually with workflow_dispatch
 
 on:
- push:
-  branches: [main]
- pull_request:
-  branches: [main]
- workflow_dispatch:
- 
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
 
 # Define some jobs that should run
 
 jobs:
   Build:
-   runs-on: ubuntu-latest
-   steps:
-    - uses: actions/chceckout@v3
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-    - name: Compile
-      run: echo Imagine we are compiling our code here!
+      - name: Compile
+        run: echo Imagine we are compling our code here!
 
-DeployDev:
- name: Deploy to Dev
- if: github.event_name == 'pull_request'
- needs: [Build]
- runs-on: ubuntu-latest
- enviroment: 
-  name: Deployment
-  url: 'http://dev.myapp.com'
- step:
-  - name: Deploy
- run: echo Your code is being deployed to dev.myapp.com!
+  DeployDev:
+    name: Deploy to Dev
+    if: github.event_name == 'pull_request'
+    needs: [Build]
+    runs-on: ubuntu-latest
+    environment:
+      name: Development
+      url: 'http://dev.myapp.com'
+    steps:
+      - name: Deploy
+        run: echo Your code is being deployed to dev.myapp.com!
 
-# Our deployment to Staging enviroment job
- DeployStaging:
-  name: Deploy to DeployStaging
-  if: github.event.ref == 'ref/heads/main'
-  needs: [Build]
-  runs-on: ubuntu-latest
-  enviroment:
-   name: Staging
-   url: 'http://test.myapp.com'
-  steps:
-   - name: Deploy
-      run: echo Your code is being depolyed to staging at http://test.myapp.com
-
-# Our deployment to production
-
- DeployProduction:
-  name: Deploy to Producytion
-  needs: [DeployStaging]
-  runs-on: ubuntu-latest
-  enviroment:
-   name: Production
-   url: 'http://www.myapp.com'
-  steps:
-   - name: Deploy
-     run: echo The app is live at http://myapp.com
+# Our deployment to Staging environment job
+  DeployStaging:
+    name: Deploy to DeployStaging
+    if: github.event.ref == 'refs/heads/main'
+    needs: [ Build ]
+    runs-on: ubuntu-latest
+    environment:
+      name: Staging
+      url: 'http://test.myapp.com'
+    steps:
+      - name: Deploy
+        run: echo Your code is being deployed to staging at http://test.myapp.com
   
+# Our deployment to production job
+
+  DeployProduction:
+    name: Deploy to production
+    needs: [DeployStaging]
+    runs-on: ubuntu-latest
+    environment:
+      name: Production
+      url: 'http://www.myapp.com'
+    steps: 
+      - name: Deploy
+        run: echo The app is live at http://www.myapp.com
