@@ -12,7 +12,7 @@ on:
 
 # Define some jobs that should run
 
- jobs:
+jobs:
   Build:
    runs-on: ubuntu-latest
    steps:
@@ -31,7 +31,7 @@ DeployDev:
   url: 'http://dev.myapp.com'
  step:
   - name: Deploy
-   run: echo Your code is being deployed to dev.myapp.com!
+ run: echo Your code is being deployed to dev.myapp.com!
 
 # Our deployment to Staging enviroment job
  DeployStaging:
@@ -44,7 +44,7 @@ DeployDev:
    url: 'http://test.myapp.com'
   steps:
    - name: Deploy
-     run: echo Your code is being depolyed to staging at http://test.myapp.com
+      run: echo Your code is being depolyed to staging at http://test.myapp.com
 
 # Our deployment to production
 
